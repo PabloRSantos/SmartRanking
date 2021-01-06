@@ -56,7 +56,7 @@ export class PlayersService {
 
     async getAllPlayers(): Promise<Player[]> {
         try {
-            return await this.playerModel.find().populate('category');
+            return await this.playerModel.find();
         } catch (error) {
             this.logger.error(`error: ${error.message}`);
             throw new RpcException(error.message);
@@ -65,7 +65,7 @@ export class PlayersService {
 
     async getPlayerById(id: string): Promise<Player> {
         try {
-            const player = this.playerModel.findById(id).populate('category');
+            const player = this.playerModel.findById(id);
 
             if (!player) {
                 throw new NotFoundException(

@@ -4,18 +4,15 @@ import { CategoriesModule } from './categories/categories.module';
 import { PlayersModule } from './players/players.module';
 
 @Module({
-  imports: [
-    MongooseModule.forRoot(
-      'mongodb+srv://admin:prs100502@cluster0.yiris.mongodb.net/sradmbackend?retryWrites=true&w=majority',
-      {
-        useNewUrlParser: true,
-        useCreateIndex: true,
-        useUnifiedTopology: true,
-        useFindAndModify: true,
-      },
-    ),
-    CategoriesModule,
-    PlayersModule,
-  ],
+    imports: [
+        MongooseModule.forRoot(process.env.MONGO_URL, {
+            useNewUrlParser: true,
+            useCreateIndex: true,
+            useUnifiedTopology: true,
+            useFindAndModify: true,
+        }),
+        CategoriesModule,
+        PlayersModule,
+    ],
 })
 export class AppModule {}
