@@ -1,8 +1,8 @@
+import 'dotenv/config';
 import { Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { Transport } from '@nestjs/microservices';
 import { AppModule } from './app.module';
-import 'dotenv/config';
 
 const logger = new Logger('Main');
 
@@ -10,7 +10,7 @@ async function bootstrap() {
     const app = await NestFactory.createMicroservice(AppModule, {
         transport: Transport.RMQ,
         options: {
-            urls: ['amqp://user:2suCtsau5xe1@3.89.129.202:5672/smartranking'],
+            urls: [process.env.RMQ_URL],
             noAck: false,
             queue: 'admin-backend',
         },

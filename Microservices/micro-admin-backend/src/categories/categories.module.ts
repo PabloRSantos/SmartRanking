@@ -6,13 +6,14 @@ import { CategorySchema } from './interfaces/category.schema';
 import { PlayerSchema } from '../players/interfaces/player.schema';
 
 @Module({
-  controllers: [CategoriesController],
-  providers: [CategoriesService],
-  imports: [
-    MongooseModule.forFeature([
-      { name: 'Players', schema: PlayerSchema },
-      { name: 'Categories', schema: CategorySchema },
-    ]),
-  ],
+    controllers: [CategoriesController],
+    providers: [CategoriesService],
+    exports: [CategoriesService],
+    imports: [
+        MongooseModule.forFeature([
+            { name: 'Players', schema: PlayerSchema },
+            { name: 'Categories', schema: CategorySchema },
+        ]),
+    ],
 })
 export class CategoriesModule {}

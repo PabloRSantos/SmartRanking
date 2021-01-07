@@ -1,5 +1,6 @@
-import { IsNotEmpty } from 'class-validator';
-import { Player } from 'src/players/interfaces/player.interface';
+import { IsNotEmpty } from 'class-validator'; 
+import { Player } from 'Monolito/src/players/interfaces/player.interface';
+
 import { Result } from '../interfaces/challenge.interface';
 
 export class SetGameInChallengeDto {

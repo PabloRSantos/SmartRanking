@@ -16,4 +16,14 @@ export class ClientProxySmartRanking {
             },
         });
     }
+
+    getClientProxyChallengesIstance(): ClientProxy {
+        return ClientProxyFactory.create({
+            transport: Transport.RMQ,
+            options: {
+                urls: [process.env.RMQ_URL],
+                queue: 'challenge-backend',
+            },
+        });
+    }
 }
