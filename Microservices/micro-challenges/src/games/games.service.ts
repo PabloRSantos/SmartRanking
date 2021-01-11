@@ -8,33 +8,41 @@ import { Game } from './interfaces/game.interface';
 
 @Injectable()
 export class GamesService {
-  constructor(
-    @InjectModel('Games') private readonly gameModel: Model<Game>,
-    private readonly clientProxy: ProxyrmqService,
-  ) {}
+    constructor(
+        @InjectModel('Games') private readonly gameModel: Model<Game>,
+        private readonly clientProxy: ProxyrmqService,
+    ) {}
 
-  private readonly clientChallengesBackend = this.clientProxy.getClientProxyChallengesIstance();
+    private readonly clientChallenges = this.clientProxy.getClientProxyChallengesIstance();
+    private readonly clientRankings = this.clientProxy.getClientProxyRankingsIstance();
 
-  async createGame(game: Game): Promise<Game> {
-    try {
-      const newGame = new this.gameModel(game);
-      const gameResult = await newGame.save();
+    async createGame(game: Game): Promise<Game> {
+        try {
+            const newGame = new this.gameModel(game);
+            const gameResult = await newGame.save();
 
-      const challenge: Challenge = await this.clientChallengesBackend
-        .send('get-challenges', {
-          challengeId: gameResult.challenge,
-          playerId: '',
-        })
-        .toPromise();
+            const challenge: Challenge = await this.clientChallenges
+                .send('get-challenges', {
+                    challengeId: gameResult.challenge,
+                    playerId: '',
+                })
+                .toPromise();
 
-      return await this.clientChallengesBackend
-        .emit('update-game-challenge', {
-          id: gameResult._id,
-          challenge,
-        })
-        .toPromise();
-    } catch (error) {
-      throw new RpcException(error.message);
+            await this.clientChallenges
+                .emit('update-game-challenge', {
+                    id: gameResult._id,
+                    challenge,
+                })
+                .toPromise();
+
+            return await this.clientRankings
+                .emit('game-process', {
+                    id: gameResult._id,
+                    game: gameResult,
+                })
+                .toPromise();
+        } catch (error) {
+            throw new RpcException(error.message);
+        }
     }
-  }
 }

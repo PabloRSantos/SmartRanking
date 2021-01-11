@@ -175,8 +175,6 @@ export class ChallengesController {
             result,
         };
 
-        console.log(game);
-
         this.clientChallengesBackend.emit('create-game', game);
     }
 }

@@ -7,7 +7,7 @@ import { ChallengeModule } from './challenge/challenge.module';
 @Module({
   imports: [
     MongooseModule.forRoot(
-      'mongodb+srv://admin:prs100502@cluster0.yiris.mongodb.net/smartRanking?retryWrites=true&w=majority',
+      process.env.MONGO_URL,
       {
         useNewUrlParser: true,
         useCreateIndex: true,

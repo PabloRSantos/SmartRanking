@@ -7,23 +7,23 @@ const ackErros: string[] = [];
 
 @Controller('games')
 export class GamesController {
-  constructor(private readonly gameService: GamesService) {}
+    constructor(private readonly gameService: GamesService) {}
 
-  @EventPattern('create-game')
-  async createGame(@Payload() game: Game, @Ctx() context: RmqContext) {
-    const channel = context.getChannelRef();
-    const originalMessage = context.getMessage();
-    try {
-      await this.gameService.createGame(game);
-      await channel.ack(originalMessage);
-    } catch (error) {
-      const filteredAckError = ackErros.filter((ackError) =>
-        error.message.includes(ackError),
-      );
+    @EventPattern('create-game')
+    async createGame(@Payload() game: Game, @Ctx() context: RmqContext) {
+        const channel = context.getChannelRef();
+        const originalMessage = context.getMessage();
+        try {
+            await this.gameService.createGame(game);
+            await channel.ack(originalMessage);
+        } catch (error) {
+            const filteredAckError = ackErros.filter((ackError) =>
+                error.message.includes(ackError),
+            );
 
-      if (filteredAckError) {
-        await channel.ack(originalMessage);
-      }
+            if (filteredAckError) {
+                await channel.ack(originalMessage);
+            }
+        }
     }
-  }
 }

@@ -1,5 +1,5 @@
 import { Document } from 'mongoose';
-import { Player } from 'Monolito/src/players/interfaces/player.interface';
+import {Player} from '../../players/interfaces/player.interface'
 import { ChallengeStatus } from './challengeStatus.enum';
 
 export interface Challenge extends Document {
