@@ -3,7 +3,7 @@ import { Ctx, EventPattern, Payload, RmqContext } from '@nestjs/microservices';
 import { GamesService } from './games.service';
 import { Game } from './interfaces/game.interface';
 
-const ackErros: string[] = [];
+const ackErrors: string[] = ['E11000'];
 
 @Controller('games')
 export class GamesController {
@@ -17,7 +17,7 @@ export class GamesController {
             await this.gameService.createGame(game);
             await channel.ack(originalMessage);
         } catch (error) {
-            const filteredAckError = ackErros.filter((ackError) =>
+            const filteredAckError = ackErrors.filter((ackError) =>
                 error.message.includes(ackError),
             );
 

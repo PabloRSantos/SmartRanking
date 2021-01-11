@@ -9,7 +9,7 @@ import {
 import { ChallengesService } from './challenges.service';
 import { Challenge } from './interfaces/challenge.interface';
 
-const ackErros: string[] = [];
+const ackErrors: string[] = ['E11000'];
 
 @Controller('challenges')
 export class ChallengesController {
@@ -27,7 +27,7 @@ export class ChallengesController {
             await this.challengeService.createChallenge(challenge);
             await channel.ack(originalMessage);
         } catch (error) {
-            const filteredAckError = ackErros.filter((ackError) =>
+            const filteredAckError = ackErrors.filter((ackError) =>
                 error.message.includes(ackError),
             );
 
@@ -76,7 +76,7 @@ export class ChallengesController {
             await this.challengeService.updateChallenge(challenge, id);
             await channel.ack(originalMessage);
         } catch (error) {
-            const filteredAckError = ackErros.filter((ackError) =>
+            const filteredAckError = ackErrors.filter((ackError) =>
                 error.message.includes(ackError),
             );
 
@@ -95,7 +95,7 @@ export class ChallengesController {
             await this.challengeService.deleteChallenge(id);
             await channel.ack(originalMessage);
         } catch (error) {
-            const filteredAckError = ackErros.filter((ackError) =>
+            const filteredAckError = ackErrors.filter((ackError) =>
                 error.message.includes(ackError),
             );
 
@@ -119,7 +119,7 @@ export class ChallengesController {
             await this.challengeService.updateGameChallenge(id, challenge);
             await channel.ack(originalMessage);
         } catch (error) {
-            const filteredAckError = ackErros.filter((ackError) =>
+            const filteredAckError = ackErrors.filter((ackError) =>
                 error.message.includes(ackError),
             );
 

@@ -9,7 +9,7 @@ import {
 import { CategoriesService } from './categories.service';
 import { Category } from './interfaces/category.interface';
 
-const ackErrors: string[] = [];
+const ackErrors: string[] = ['E11000'];
 
 @Controller()
 export class CategoriesController {

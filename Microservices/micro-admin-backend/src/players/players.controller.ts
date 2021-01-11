@@ -10,7 +10,7 @@ import { CategoriesService } from 'src/categories/categories.service';
 import { Player } from './interfaces/player.interface';
 import { PlayersService } from './players.service';
 
-const ackErros: string[] = [];
+const ackErrors: string[] = ['E11000'];
 
 @Controller()
 export class PlayersController {
@@ -32,7 +32,7 @@ export class PlayersController {
             );
             await channel.ack(originalMessage);
         } catch (error) {
-            const filteredAckError = ackErros.filter((ackError) =>
+            const filteredAckError = ackErrors.filter((ackError) =>
                 error.message.includes(ackError),
             );
 
@@ -55,7 +55,7 @@ export class PlayersController {
             await this.playersService.updatePlayer(player, id);
             await channel.ack(originalMessage);
         } catch (error) {
-            const filteredAckError = ackErros.filter((ackError) =>
+            const filteredAckError = ackErrors.filter((ackError) =>
                 error.message.includes(ackError),
             );
 
@@ -89,7 +89,7 @@ export class PlayersController {
             await this.playersService.deletePlayer(id);
             await channel.ack(originalMessage);
         } catch (error) {
-            const filteredAckError = ackErros.filter((ackError) =>
+            const filteredAckError = ackErrors.filter((ackError) =>
                 error.message.includes(ackError),
             );
 
