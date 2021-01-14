@@ -1,8 +1,8 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { RpcException } from '@nestjs/microservices';
+import { ClientProxy, RpcException } from '@nestjs/microservices';
 import { InjectModel } from '@nestjs/mongoose';
-import momentTimezone from 'moment-timezone';
 import { Model } from 'mongoose';
+import { ProxyrmqService } from 'src/proxyrmq/proxyrmq.service';
 import { Challenge } from './interfaces/challenge.interface';
 import { ChallengeStatus } from './interfaces/challengeStatus.enum';
 
@@ -13,13 +13,20 @@ export class ChallengesService {
     constructor(
         @InjectModel('Challenges')
         private readonly challengeModel: Model<Challenge>,
+        private readonly clientProxy: ProxyrmqService,
     ) {}
+
+    private readonly notificationsClient = this.clientProxy.getClientProxyNotificationsIstance();
 
     async createChallenge(challenge: Challenge): Promise<Challenge> {
         try {
             const newChallenge = new this.challengeModel(challenge);
             newChallenge.status = ChallengeStatus.PENDENTE;
-            return newChallenge.save();
+            await newChallenge.save();
+
+            return await this.notificationsClient
+                .emit('notification-new-challenge', challenge)
+                .toPromise();
         } catch (error) {
             this.logger.error(error.message);
             throw new RpcException(error.message);
