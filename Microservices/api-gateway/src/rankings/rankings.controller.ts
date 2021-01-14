@@ -1,4 +1,11 @@
-import { BadRequestException, Controller, Get, Query } from '@nestjs/common';
+import {
+    BadRequestException,
+    Controller,
+    Get,
+    Query,
+    UseGuards,
+} from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { Observable } from 'rxjs';
 import { ClientProxySmartRanking } from 'src/proxyrmq/proxyrmq.service';
 
@@ -8,6 +15,7 @@ export class RankingsController {
 
     private rankingClient = this.clientProxy.getClientProxyRankingsIstance();
 
+    @UseGuards(AuthGuard('jwt'))
     @Get()
     getRanking(
         @Query('categoryId') categoryId: string,

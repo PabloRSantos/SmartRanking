@@ -10,10 +10,12 @@ import {
     Put,
     Query,
     UploadedFile,
+    UseGuards,
     UseInterceptors,
     UsePipes,
     ValidationPipe,
 } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Observable } from 'rxjs';
 import { AwsService } from 'src/aws/aws.service';
@@ -31,11 +33,13 @@ export class PlayersController {
 
     private readonly clientAdminBackend = this.clientProxySmartRanking.getClientProxyAdminInstance();
 
+    @UseGuards(AuthGuard('jwt'))
     @Get()
     getPlayers(@Query('id') id: string): Observable<any> {
         return this.clientAdminBackend.send('get-players', id ? id : '');
     }
 
+    @UseGuards(AuthGuard('jwt'))
     @Put('/:id/upload')
     @UseInterceptors(FileInterceptor('file'))
     async uploadFile(@UploadedFile() file, @Param('id') id: string) {
@@ -62,6 +66,7 @@ export class PlayersController {
         return this.clientAdminBackend.send('get-players', id);
     }
 
+    @UseGuards(AuthGuard('jwt'))
     @Post()
     @UsePipes(ValidationPipe)
     async createPlayer(
@@ -78,6 +83,7 @@ export class PlayersController {
         this.clientAdminBackend.emit('create-player', createPlayerDto);
     }
 
+    @UseGuards(AuthGuard('jwt'))
     @Put('/:id')
     @UsePipes(ValidationPipe)
     async updatePlayer(
@@ -99,6 +105,7 @@ export class PlayersController {
         });
     }
 
+    @UseGuards(AuthGuard('jwt'))
     @Delete('/:id')
     deletePlayer(@Param('id') id: string) {
         this.clientAdminBackend.emit('delete-player', id);

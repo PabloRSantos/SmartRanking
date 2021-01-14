@@ -8,9 +8,11 @@ import {
     Post,
     Put,
     Query,
+    UseGuards,
     UsePipes,
     ValidationPipe,
 } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { ClientProxySmartRanking } from 'src/proxyrmq/proxyrmq.service';
 import { CreateChallengeDto } from './dto/createChallenge.dto';
 import { SetGameInChallengeDto } from './dto/setGameInChallenge.dto';
@@ -27,6 +29,7 @@ export class ChallengesController {
     private clientChallengesBackend = this.clientProxy.getClientProxyChallengesIstance();
     private clientAdminBackend = this.clientProxy.getClientProxyAdminInstance();
 
+    @UseGuards(AuthGuard('jwt'))
     @Post()
     @UsePipes(ValidationPipe)
     async createChallenge(@Body() createChallengeDto: CreateChallengeDto) {
@@ -79,6 +82,7 @@ export class ChallengesController {
         );
     }
 
+    @UseGuards(AuthGuard('jwt'))
     @Get()
     async getChallenges(@Query('playerId') playerId: string) {
         if (playerId) {
@@ -97,6 +101,7 @@ export class ChallengesController {
         });
     }
 
+    @UseGuards(AuthGuard('jwt'))
     @Put('/:id')
     @UsePipes(ValidationPipe)
     async updateChallenge(
@@ -124,6 +129,7 @@ export class ChallengesController {
         });
     }
 
+    @UseGuards(AuthGuard('jwt'))
     @Delete('/:id')
     async deleteChallenge(@Param('id') id: string) {
         const challengeExist = await this.clientChallengesBackend
@@ -136,6 +142,7 @@ export class ChallengesController {
         this.clientChallengesBackend.emit('delete-challenge', id);
     }
 
+    @UseGuards(AuthGuard('jwt'))
     @Post('/:id/game')
     @UsePipes(ValidationPipe)
     async setGameInChallenge(

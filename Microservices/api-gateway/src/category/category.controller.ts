@@ -7,9 +7,11 @@ import {
     Post,
     Put,
     Query,
+    UseGuards,
     UsePipes,
     ValidationPipe,
 } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { Observable } from 'rxjs';
 import { ClientProxySmartRanking } from 'src/proxyrmq/proxyrmq.service';
 import { CreateCategoryDto } from './dtos/createCategory.dto';
@@ -25,17 +27,20 @@ export class CategoryController {
 
     private readonly clientAdminBackend = this.clientProxySmartRanking.getClientProxyAdminInstance();
 
+    @UseGuards(AuthGuard('jwt'))
     @Post()
     @UsePipes(ValidationPipe)
     createCategory(@Body() createCategoryDto: CreateCategoryDto): void {
         this.clientAdminBackend.emit('create-category', createCategoryDto);
     }
 
+    @UseGuards(AuthGuard('jwt'))
     @Get()
     getCategories(@Query('id') id: string): Observable<any> {
         return this.clientAdminBackend.send('get-categories', id ? id : '');
     }
 
+    @UseGuards(AuthGuard('jwt'))
     @Put('/:id')
     @UsePipes(ValidationPipe)
     updateCategory(
